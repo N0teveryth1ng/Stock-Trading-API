@@ -1,73 +1,71 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-// import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { VictoryChart, VictoryLine, VictoryAxis, VictoryTooltip } from "victory";
 
-// const cors = require('cors');
-
-
-
 const Finance = () => {
-
     const [symbol, setSymbol] = useState('');
-    const [data ,setData] = useState([]);
-
+    const [data, setData] = useState([]);
 
     async function fetchData() {
+        if (!symbol) return;
 
-        if(!symbol) return;
-
-        try{
+        try {
             const res = await axios.get(`http://localhost:5000/stock?symbol=${symbol}`);
-            console.log('api response: ', res.data); 
+            console.log("API Response:", res.data);
 
-            if (!res.data || !res.data["Time Series (Daily)"]) {
+            if (!Array.isArray(res.data) || res.data.length === 0) {
                 console.error("Invalid API response format:", res.data);
                 return;
             }
 
-            const timeSeries = res.data['Time Series (Daily)'];
-            const formattedData = Object.keys(timeSeries).map(time => ({ time,
-                x: new Date(time),
-                y: parseFloat(timeSeries[time]["1. open"])
-             })).reverse();  
+            // Ensure 'x' is a Date object, filter out invalid prices, and sort by date
+            const formattedData = res.data
+                .map(item => ({
+                    x: new Date(item.x),  // Ensure x is a valid Date object
+                    y: item.y ?? null      // Remove null/undefined values
+                }))
+                .filter(item => item.y !== null) // Remove any null values
+                .sort((a, b) => a.x - b.x);      // Sort data by time
 
-            console.log("vantage data", formattedData);
-            setData(formattedData)
+            console.log("Formatted Chart Data:", formattedData);
+            setData(formattedData);
         } catch (error) {
-            console.error('invalid fetching', error);
+            console.error("Error fetching stock data:", error);
+        }
     }
-} 
 
-  useEffect(() => {
-    fetchData();
-  }, [symbol])
+    useEffect(() => {
+        fetchData();
+    }, [symbol]);
 
-  return(
-    <div>
-        
-        <h1>Stock Price Tracker</h1>
+    return (
+        <div>
+            <h1>Stock Price Tracker</h1>
 
-        <input value={symbol} onChange={(e) => setSymbol(e.target.value)} placeholder="enter symbol (APPL): " />
-        <button onClick={fetchData}>get data</button>
+            <input 
+                value={symbol} 
+                onChange={(e) => setSymbol(e.target.value.toUpperCase())} 
+                placeholder="Enter symbol (AAPL):" 
+            />
+            <button onClick={fetchData}>Get Data</button>
 
-        {data.length > 0 && (
-             <VictoryChart>
-             <VictoryAxis fixLabelOverlap />
-             <VictoryAxis dependentAxis />
-             <VictoryLine 
-               data={data} 
-               style={{ data: { stroke: "#8884d8" } }} 
-               labels={({ datum }) => `${datum.y}`}
-               labelComponent={<VictoryTooltip />}
-             />
-           </VictoryChart>
-        )} 
-
-    </div>
-  )
-
+            {data.length > 0 && (
+                <VictoryChart>
+                    <VictoryAxis 
+                        fixLabelOverlap 
+                        tickFormat={(tick) => new Date(tick).toLocaleDateString()} // Better date formatting
+                    />
+                    <VictoryAxis dependentAxis />
+                    <VictoryLine 
+                        data={data} 
+                        style={{ data: { stroke: "#8884d8" } }} 
+                        labels={({ datum }) => `${datum.y}`}
+                        labelComponent={<VictoryTooltip />}
+                    />
+                </VictoryChart>
+            )}
+        </div>
+    );
 }
 
-export default Finance
-
+export default Finance;

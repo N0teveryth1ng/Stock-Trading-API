@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "App.js",
   "scripts": {
+    "dev": "nodemon App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,8 +15,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "nodemon": "^3.1.9",
     "recharts": "^2.15.1",
     "victory": "^37.3.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
