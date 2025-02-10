@@ -1,10 +1,3 @@
-[CONTRIBUTING.md](https://github.com/user-attachments/files/18729232/CONTRIBUTING.md)
-
-
-
-
-
-
 Contributing to Stock tracker app
 First off, thanks for taking the time to contribute! ❤️
 
