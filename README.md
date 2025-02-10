@@ -1,6 +1,6 @@
 Note:--
-This is a simple stock tracker site. which is able to fetch the stock narket data based or the required organisation (APPL,TSLA,NVDA).
-It's still in development phase. Iam learning about finance and also developing the simple application with it as well.
+This is a simple stock tracker site. which is able to fetch the stock market data based on the required organisation (APPL,TSLA,NVDA).
+It's still in development phase. Iam learning about finance and also developing the application with it as well to hone my tech/finance stack both.
 
 * ANY SUGGESTIONS OR TIPS WILL BE APPRECIATED. 
 * also, IT'S TOTALY FREE TO FORK AND CONTRUBUTE (GO AHEAD)
